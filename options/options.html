@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lazarus Revived — Options</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon48.png" alt="" width="32" height="32">
+    <div>
+      <h1>Lazarus Revived</h1>
+      <p>Form recovery, the way it used to be. <span id="stats"></span></p>
+    </div>
+  </header>
+
+  <p id="saved" class="saved" hidden>Saved ✓</p>
+
+  <section>
+    <h2>Saving</h2>
+    <label class="row"><input type="checkbox" id="enabled"> <span>Save text as I type <small>(master switch)</small></span></label>
+    <label class="row"><span>Keep saved text for</span> <input type="number" id="retentionDays" min="1" max="365"> <span>days</span></label>
+    <label class="row"><span>Keep at most</span> <input type="number" id="maxEntries" min="10" max="5000"> <span>entries (oldest are dropped first)</span></label>
+    <label class="row"><span>Ignore text shorter than</span> <input type="number" id="minTextLength" min="1" max="100"> <span>characters</span></label>
+    <label class="row"><span>Ignore text longer than</span> <input type="number" id="maxTextLength" min="1000" max="5000000" step="1000"> <span>characters</span></label>
+    <label class="row"><input type="checkbox" id="saveContentEditable"> <span>Also save rich-text editors <small>(contenteditable: Gmail, Notion, forum editors…)</small></span></label>
+  </section>
+
+  <section>
+    <h2>Security limits</h2>
+    <p class="help">Password fields are never saved, no matter what. These extra limits are on by default.</p>
+    <label class="row"><input type="checkbox" id="skipSensitiveFields"> <span>Skip fields that look sensitive <small>(name, label or autocomplete mentions card numbers, CVV, one-time codes, SSN/TFN, IBAN, PIN, tokens…)</small></span></label>
+    <label class="row"><input type="checkbox" id="skipCardNumbers"> <span>Never save text containing a valid payment-card number <small>(Luhn check)</small></span></label>
+    <label class="row"><input type="checkbox" id="respectAutocompleteOff"> <span>Respect <code>autocomplete="off"</code> <small>(off by default: many ordinary sites set it on everything)</small></span></label>
+    <label class="row"><input type="checkbox" id="saveInIncognito"> <span>Save in Incognito windows <small>(only applies if you allow the extension in Incognito)</small></span></label>
+
+    <h3>Never save on these sites</h3>
+    <p class="help">One per line. <code>example.com</code> also covers its subdomains; <code>*.example.com</code> covers only subdomains. Banking and login portals are good candidates.</p>
+    <textarea id="blockedHosts" rows="8" spellcheck="false"></textarea>
+    <p class="help">Fields can also opt out individually with a <code>data-lazarus-ignore</code> attribute.</p>
+  </section>
+
+  <section>
+    <h2>Encryption</h2>
+    <p class="help">
+      Without a passphrase, saved text sits in the extension's local storage in the clear, protected only by your OS user account
+      (same as Chrome's own history and autofill). With a passphrase, every entry is encrypted with a fresh AES-256-GCM key
+      that is wrapped to an RSA-2048 public key. Saving keeps working while locked; reading needs the passphrase, which is
+      asked for once per browser session. <strong>There is no recovery if you forget it.</strong>
+    </p>
+    <div id="encNone">
+      <form id="setForm" class="inline">
+        <input type="password" id="newPass" placeholder="New passphrase (6+ chars)" autocomplete="new-password">
+        <input type="password" id="newPass2" placeholder="Repeat" autocomplete="new-password">
+        <button type="submit">Set passphrase &amp; encrypt</button>
+      </form>
+    </div>
+    <div id="encSet" hidden>
+      <p class="help">A passphrase is set. <span id="lockState"></span></p>
+      <form id="changeForm" class="inline">
+        <input type="password" id="oldPass" placeholder="Current passphrase" autocomplete="current-password">
+        <input type="password" id="chgPass" placeholder="New passphrase" autocomplete="new-password">
+        <button type="submit">Change</button>
+      </form>
+      <form id="removeForm" class="inline">
+        <input type="password" id="rmPass" placeholder="Current passphrase" autocomplete="current-password">
+        <button type="submit" class="danger">Remove passphrase &amp; decrypt</button>
+      </form>
+    </div>
+    <p id="encError" class="error" hidden></p>
+  </section>
+
+  <section>
+    <h2>Your data</h2>
+    <p class="help">Everything stays on this computer. Nothing is sent anywhere.</p>
+    <div class="inline">
+      <button id="exportBtn">Export all saved text (JSON)</button>
+      <button id="clearBtn" class="danger">Delete all saved text</button>
+    </div>
+    <p id="dataMsg" class="help"></p>
+  </section>
+
+  <script src="../lib/heuristics.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

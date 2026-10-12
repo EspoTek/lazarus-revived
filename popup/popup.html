@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Lazarus Revived</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="../icons/icon32.png" alt="" width="20" height="20">
+    <h1>Lazarus</h1>
+    <span id="site" class="site"></span>
+    <span class="spacer"></span>
+    <button id="lockBtn" class="icon" title="Lock" hidden>🔒</button>
+    <button id="fullBtn" class="icon" title="Open in a full tab">⤢</button>
+    <button id="optionsBtn" class="icon" title="Options">⚙</button>
+  </header>
+
+  <section id="unlock" hidden>
+    <p>Your saved text is encrypted. Enter your passphrase to read or restore it. New text is still being saved while locked.</p>
+    <form id="unlockForm">
+      <input id="passphrase" type="password" placeholder="Passphrase" autocomplete="off" autofocus>
+      <button type="submit">Unlock</button>
+    </form>
+    <p id="unlockError" class="error" hidden></p>
+  </section>
+
+  <section id="notice" class="notice" hidden></section>
+
+  <div class="toolbar">
+    <input id="search" type="search" placeholder="Search saved text…" autocomplete="off">
+    <label class="toggle"><input id="allSites" type="checkbox"> All sites</label>
+  </div>
+
+  <ul id="list"></ul>
+  <p id="empty" class="empty" hidden>Nothing saved yet. Start typing in a form and it will show up here.</p>
+
+  <footer>
+    <button id="pauseBtn" class="link" hidden></button>
+    <span class="spacer"></span>
+    <span id="count" class="count"></span>
+    <button id="clearBtn" class="link danger">Clear all</button>
+  </footer>
+
+  <script src="../lib/heuristics.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
